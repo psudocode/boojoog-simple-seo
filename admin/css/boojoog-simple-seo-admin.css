@@ -1,0 +1,101 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+    * under bss class
+ */
+
+ /* create css variable for base color */
+:root {
+    --bss-text-color: #ffffff;
+    --bss-background-color: #1d2327;
+    --bss-link-color: #1e90ff;
+    --bss-link-hover-color: #1678da;
+}
+
+.bss {
+    background-color: var(--bss-background-color);
+    padding: 10px 20px 10px 20px;
+    border-radius: 8px;
+    color: var(--bss-text-color);
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.bss h1 {
+    font-size: 2em;
+}
+
+.bss h1, .bss h2, .bss h3, .bss h4, .bss h5, .bss h6 {
+    color: var(--bss-text-color) !important;
+}
+
+.bss .version {
+    font-size: 12px;
+    font-style: italic;
+    margin-bottom: 30px;
+    display: block;
+}
+
+.bss p {
+    margin-bottom: 12px;
+}
+
+.bss form {
+    margin-top: 20px;
+}
+
+.bss a {
+    color: var(--bss-link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.bss a:hover {
+    color: var(--bss-link-hover-color);
+}
+
+.bss .boojoog-footer {
+    margin-top: 40px;
+    font-size: 0.875em;
+}
+
+.bss hr {
+    border: 0;
+    border-top: 1px solid #444;
+    margin: 20px 0;
+}
+.bss label, .bss th {
+    color: var(--bss-text-color);
+}
+
+/* TABS */
+.bss .nav-tab-wrapper {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #625252;
+}
+
+.bss .nav-tab {
+    display: inline-block;
+    padding: 5px 20px;
+    text-decoration: none;
+    color: #98a8af;
+    border: 1px solid #625252;
+    cursor: pointer;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #000;
+}
+
+.bss .nav-tab-active {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+    color: #000;
+}
+
+.bss .tab-content {
+    display: none;
+}
+
+.bss .tab-content.active {
+    display: block;
+}
