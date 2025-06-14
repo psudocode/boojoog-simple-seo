@@ -107,6 +107,58 @@ We welcome contributions! Please follow these steps:
 - Use proper PHPDoc comments
 - Test your code thoroughly
 
+## 📦 Development & Release Management
+
+### Version Management
+
+This plugin uses automated version management to keep all version references in sync. The version is automatically updated in:
+
+- Plugin header (`boojoog-simple-seo.php`)
+- PHP constant (`BOOJOOG_SIMPLE_SEO_VERSION`)
+- README.md version badge
+- README.txt stable tag (if present)
+
+### Creating a New Release
+
+**Option 1: Using the Release Script (Recommended)**
+
+```bash
+./scripts/create-release.sh
+```
+
+**Option 2: Manual Tag Creation**
+
+```bash
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+Both methods will trigger the automated release workflow that:
+
+1. ✅ Updates all version references
+2. ✅ Creates a distribution ZIP file
+3. ✅ Creates a GitHub release
+4. ✅ Uploads the ZIP to the release
+
+### Checking Version Status
+
+To verify all versions are in sync:
+
+```bash
+./scripts/check-version.sh
+```
+
+### Installing Pre-commit Hook
+
+To prevent version inconsistencies:
+
+```bash
+cp scripts/pre-commit-hook.sh .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+For more details, see [scripts/README.md](scripts/README.md).
+
 ## 🐛 Bug Reports
 
 If you find a bug, please report it by:
@@ -126,15 +178,18 @@ Have an idea for a new feature? We'd love to hear it!
 ## �️ Roadmap
 
 ### Current Status
+
 - ✅ **Homepage SEO**: Complete optimization for homepage content and meta tags
 
 ### Planned Features
 
 #### 🎯 Next Release (v1.1.0)
+
 - [ ] **Post and Page SEO**: Individual SEO optimization for posts and pages
 - [ ] **Custom Taxonomy SEO**: SEO support for custom taxonomies and terms
 
 #### 🚀 Future Releases (v1.2.0+)
+
 - [ ] **SEO Real-time Scoring**: Live SEO analysis and scoring system
 - [ ] **AI Integrations**: AI-powered content optimization suggestions
 - [ ] **Advanced Analytics**: Detailed SEO performance tracking
@@ -142,6 +197,7 @@ Have an idea for a new feature? We'd love to hear it!
 - [ ] **Social Media Optimization**: Enhanced social sharing features
 
 #### 🎨 Long-term Vision
+
 - [ ] **Multi-language Support**: Internationalization for global sites
 - [ ] **E-commerce SEO**: Specialized features for WooCommerce
 - [ ] **Local SEO**: Location-based optimization tools

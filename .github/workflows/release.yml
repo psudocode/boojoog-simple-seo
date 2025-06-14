@@ -3,104 +3,173 @@ name: Create Plugin Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Triggers on version tags like v1.0.0, v1.2.3, etc.
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+      - "v*.*.*" # Triggers on version tags like v1.0.0, v1.2.3, etc.
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Get version from tag
-      id: get_version
-      run: |
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-        else
-          VERSION="dev-$(date +%Y%m%d-%H%M%S)"
-        fi
-        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-        echo "Plugin version: $VERSION"
-    
-    - name: Prepare plugin directory
-      run: |
-        # Create a clean directory for the plugin
-        mkdir -p plugin-build/boojoog-simple-seo
-        
-        # Copy all plugin files except development files
-        rsync -av --exclude='.git*' \
-                  --exclude='.github' \
-                  --exclude='node_modules' \
-                  --exclude='*.log' \
-                  --exclude='.DS_Store' \
-                  --exclude='Thumbs.db' \
-                  --exclude='.vscode' \
-                  --exclude='.idea' \
-                  --exclude='*.tmp' \
-                  --exclude='*.temp' \
-                  ./ plugin-build/boojoog-simple-seo/
-    
-    - name: Update version in plugin file
-      run: |
-        # Update version in the main plugin file if using a tag
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          sed -i "s/Version:.*$/Version:           ${{ steps.get_version.outputs.VERSION }}/" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
-          sed -i "s/BOOJOOG_SIMPLE_SEO_VERSION', '.*'/BOOJOOG_SIMPLE_SEO_VERSION', '${{ steps.get_version.outputs.VERSION }}'/" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
-        fi
-    
-    - name: Create ZIP file
-      run: |
-        cd plugin-build
-        zip -r "../boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip" boojoog-simple-seo/
-        cd ..
-        
-        # Verify ZIP contents
-        echo "ZIP file contents:"
-        unzip -l "boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip" | head -20
-    
-    - name: Upload ZIP as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}
-        path: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
-        retention-days: 90
-    
-    - name: Create GitHub Release (for tags only)
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Boojoog Simple SEO v${{ steps.get_version.outputs.VERSION }}
-        body: |
-          ## Boojoog Simple SEO v${{ steps.get_version.outputs.VERSION }}
-          
-          ### 📦 Installation
-          1. Download the ZIP file below
-          2. Upload to WordPress via Plugins → Add New → Upload Plugin
-          3. Activate the plugin
-          
-          ### 🔗 Links
-          - [Plugin Repository](https://github.com/psudocode/boojoog-simple-seo)
-          - [Documentation](https://boojoog.com/docs)
-          - [Support](https://boojoog.com/support)
-          
-          ### ✨ What's New
-          See the [changelog](https://github.com/psudocode/boojoog-simple-seo#changelog) for detailed changes.
-        draft: false
-        prerelease: false
-    
-    - name: Upload ZIP to release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_name: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_content_type: application/zip
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="dev-$(date +%Y%m%d-%H%M%S)"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Plugin version: $VERSION"
+
+      - name: Prepare plugin directory
+        run: |
+          # Create a clean directory for the plugin
+          mkdir -p plugin-build/boojoog-simple-seo
+
+          # Copy all plugin files except development files
+          rsync -av --exclude='.git*' \
+                    --exclude='.github' \
+                    --exclude='node_modules' \
+                    --exclude='*.log' \
+                    --exclude='.DS_Store' \
+                    --exclude='Thumbs.db' \
+                    --exclude='.vscode' \
+                    --exclude='.idea' \
+                    --exclude='*.tmp' \
+                    --exclude='*.temp' \
+                    ./ plugin-build/boojoog-simple-seo/
+
+      - name: Update version in plugin files
+        run: |
+          # Update version in the main plugin file if using a tag
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${{ steps.get_version.outputs.VERSION }}
+            
+            # Update plugin header version
+            sed -i "s/Version:.*$/Version:           $VERSION/" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
+            
+            # Update PHP constant (fix regex)
+            sed -i "s/define('BOOJOOG_SIMPLE_SEO_VERSION', '.*');/define('BOOJOOG_SIMPLE_SEO_VERSION', '$VERSION');/" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
+            
+            # Update README.md version badge
+            sed -i "s/Version-.*-orange/Version-$VERSION-orange/" plugin-build/boojoog-simple-seo/README.md
+            
+            # Update README.txt stable tag if it exists
+            if [ -f "plugin-build/boojoog-simple-seo/README.txt" ]; then
+              sed -i "s/Stable tag: .*/Stable tag: $VERSION/" plugin-build/boojoog-simple-seo/README.txt
+            fi
+            
+            echo "✅ Updated version to $VERSION in all plugin files"
+            
+            # Verify the updates
+            echo "=== Verification ==="
+            echo "Plugin Header:"
+            grep "Version:" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
+            echo "PHP Constant:"
+            grep "BOOJOOG_SIMPLE_SEO_VERSION" plugin-build/boojoog-simple-seo/boojoog-simple-seo.php
+            echo "README Badge:"
+            grep "Version-" plugin-build/boojoog-simple-seo/README.md
+          fi
+
+      - name: Create ZIP file
+        run: |
+          cd plugin-build
+          zip -r "../boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip" boojoog-simple-seo/
+          cd ..
+
+          # Verify ZIP contents
+          echo "ZIP file contents:"
+          unzip -l "boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip" | head -20
+
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}
+          path: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
+          retention-days: 90
+
+      - name: Create GitHub Release (for tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Boojoog Simple SEO v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## Boojoog Simple SEO v${{ steps.get_version.outputs.VERSION }}
+
+            ### 📦 Installation
+            1. Download the ZIP file below
+            2. Upload to WordPress via Plugins → Add New → Upload Plugin
+            3. Activate the plugin
+
+            ### 🔗 Links
+            - [Plugin Repository](https://github.com/psudocode/boojoog-simple-seo)
+            - [Documentation](https://boojoog.com/docs)
+            - [Support](https://boojoog.com/support)
+
+            ### ✨ What's New
+            See the [changelog](https://github.com/psudocode/boojoog-simple-seo#changelog) for detailed changes.
+          draft: false
+          prerelease: false
+
+      - name: Upload ZIP to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_name: boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip
+          asset_content_type: application/zip
+
+      - name: Commit version updates back to repository
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          # Copy updated files back to the working directory
+          cp plugin-build/boojoog-simple-seo/boojoog-simple-seo.php ./
+          cp plugin-build/boojoog-simple-seo/README.md ./
+          if [ -f "plugin-build/boojoog-simple-seo/README.txt" ]; then
+            cp plugin-build/boojoog-simple-seo/README.txt ./
+          fi
+
+          # Configure git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Check if there are changes to commit
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git add boojoog-simple-seo.php README.md
+            if [ -f "README.txt" ]; then
+              git add README.txt
+            fi
+            git commit -m "🔖 Update version to ${{ steps.get_version.outputs.VERSION }}"
+            git push origin HEAD:main || git push origin HEAD:master || echo "Could not push changes back to repository"
+          fi
+
+      - name: Release Summary
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "## 🎉 Release v${{ steps.get_version.outputs.VERSION }} Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release Details:**" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **ZIP File:** boojoog-simple-seo-${{ steps.get_version.outputs.VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**What was updated:**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Plugin header version" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ PHP version constant" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ README.md version badge" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Release ZIP created and uploaded" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **[View Release](https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }})**" >> $GITHUB_STEP_SUMMARY
