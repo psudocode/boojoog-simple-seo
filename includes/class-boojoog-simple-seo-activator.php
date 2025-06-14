@@ -72,32 +72,36 @@ class Boojoog_Simple_Seo_Activator
 			'mastodon' => ''
 		]);
 
+		// Comented because it will be default in the plugin
+
+		// TODO: implement these options in the plugin
+
 		// // options for advanced settings
-		self::setupOption('advanced_settings', [
-			'enable_sitemap' => true,
-			'enable_breadcrumbs' => true,
-			'enable_open_graph' => true,
-			'enable_twitter_cards' => true,
-			'enable_json_ld' => true,
-			'enable_schema_markup' => true,
-		]);
+		// self::setupOption('advanced_settings', [
+		// 	'enable_sitemap' => true,
+		// 	'enable_breadcrumbs' => true,
+		// 	'enable_open_graph' => true,
+		// 	'enable_twitter_cards' => true,
+		// 	'enable_json_ld' => true,
+		// 	'enable_schema_markup' => true,
+		// ]);
 
 		// // options for performance
-		self::setupOption('performance_settings', [
-			'enable_lazy_load' => true,
-			'enable_minify_html' => true,
-			'enable_combine_css_js' => true,
-			'enable_async_js' => true,
-		]);
+		// self::setupOption('performance_settings', [
+		// 	'enable_lazy_load' => true,
+		// 	'enable_minify_html' => true,
+		// 	'enable_combine_css_js' => true,
+		// 	'enable_async_js' => true,
+		// ]);
 
 		// // options for security
-		self::setupOption('security_settings', [
-			'enable_security_headers' => true,
-			'enable_content_security_policy' => true,
-			'enable_x_frame_options' => true,
-			'enable_x_content_type_options' => true,
-			'enable_referrer_policy' => true,
-		]);
+		// self::setupOption('security_settings', [
+		// 	'enable_security_headers' => true,
+		// 	'enable_content_security_policy' => true,
+		// 	'enable_x_frame_options' => true,
+		// 	'enable_x_content_type_options' => true,
+		// 	'enable_referrer_policy' => true,
+		// ]);
 
 		// // options for analytics
 		self::setupOption('analytics_settings', [
@@ -114,7 +118,6 @@ class Boojoog_Simple_Seo_Activator
 
 		// // options for email notifications
 		self::setupOption('email_notifications', [
-			'enable_email_notifications' => false,
 			'email_notifications_recipient' => '',
 		]);
 	}

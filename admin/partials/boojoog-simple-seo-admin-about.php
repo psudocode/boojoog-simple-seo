@@ -29,6 +29,41 @@
     </p>
     <p>We believe that SEO should be accessible to everyone, and our plugin is designed to make it easy for you to
         improve your site's visibility in search engines.</p>
+
+    <h3>Implemented features: </h3>
+    <ol class="features-list">
+        <li>Meta tags management</li>
+        <li>Social media integration</li>
+        <li>XML sitemap generation</li>
+        <li>SEO analysis and recommendations</li>
+        <li>Performance optimization</li>
+        <li>Schema markup support</li>
+        <li>Customizable settings</li>
+        <li>Easy to use interface</li>
+        <li>Regular updates and support</li>
+    </ol>
+
+    <h3>Roadmap :</h3>
+    <ol class="features-list">
+        <li>Advanced SEO analysis tools</li>
+        <li>Integration with popular SEO tools</li>
+        <li>Enhanced social media features</li>
+        <li>More customization options</li>
+        <li>Improved performance and speed</li>
+        <li>Support for additional languages</li>
+        <li>Regular updates and new features</li>
+        <li>Community-driven development</li>
+        <li>Integration with popular page builders</li>
+        <li>Support for e-commerce sites</li>
+        <li>Advanced schema markup options</li>
+        <li>Integration with popular analytics tools</li>
+        <li>Improved user interface and experience</li>
+        <li>Support for additional content types</li>
+        <li>Integration with popular email marketing tools</li>
+        <li>Support for additional SEO best practices</li>
+    </ol>
+
+
     <p>For more information, please visit our <a href="https://boojoog.com" target="_blank"
             class="text-red-100 hover:text-red-200">website</a>.</p>
     <p class="boojoog-footer">

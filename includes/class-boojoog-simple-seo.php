@@ -175,18 +175,12 @@ class Boojoog_Simple_Seo
 		// Add settings pages
 		$this->loader->add_setting('site_settings');
 		$this->loader->add_setting('social_media');
-		$this->loader->add_setting('advanced_settings', [
-			'sanitize_callback' => 'sanitize_advanced_settings',
-		]);
-		$this->loader->add_setting('performance_settings', [
-			'sanitize_callback' => 'sanitize_performance_settings',
-		]);
+		$this->loader->add_setting('advanced_settings');
+		$this->loader->add_setting('performance_settings');
 		$this->loader->add_setting('security_settings');
 		$this->loader->add_setting('analytics_settings');
 		$this->loader->add_setting('webmaster_tools');
-		$this->loader->add_setting('email_notifications', [
-			'sanitize_callback' => 'sanitize_email_notifications',
-		]);
+		$this->loader->add_setting('email_notifications');
 	}
 
 	/**
