@@ -123,7 +123,33 @@ Have an idea for a new feature? We'd love to hear it!
 2. Describe the feature and its benefits
 3. Provide use cases and examples
 
-## 📞 Support
+## �️ Roadmap
+
+### Current Status
+- ✅ **Homepage SEO**: Complete optimization for homepage content and meta tags
+
+### Planned Features
+
+#### 🎯 Next Release (v1.1.0)
+- [ ] **Post and Page SEO**: Individual SEO optimization for posts and pages
+- [ ] **Custom Taxonomy SEO**: SEO support for custom taxonomies and terms
+
+#### 🚀 Future Releases (v1.2.0+)
+- [ ] **SEO Real-time Scoring**: Live SEO analysis and scoring system
+- [ ] **AI Integrations**: AI-powered content optimization suggestions
+- [ ] **Advanced Analytics**: Detailed SEO performance tracking
+- [ ] **Bulk SEO Operations**: Mass optimization tools for existing content
+- [ ] **Social Media Optimization**: Enhanced social sharing features
+
+#### 🎨 Long-term Vision
+- [ ] **Multi-language Support**: Internationalization for global sites
+- [ ] **E-commerce SEO**: Specialized features for WooCommerce
+- [ ] **Local SEO**: Location-based optimization tools
+- [ ] **Advanced Schema**: Rich snippets and structured data templates
+
+Want to contribute to any of these features? Check out our [Contributing Guidelines](#contributing) and get involved!
+
+## �📞 Support
 
 - **Documentation**: [Plugin Documentation](https://boojoog.com/docs)
 - **Support Forum**: [WordPress.org Support](https://wordpress.org/support/plugin/boojoog-simple-seo)
