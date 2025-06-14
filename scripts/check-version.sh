@@ -26,13 +26,6 @@ PLUGIN_HEADER_VERSION=$(grep -o "Version:.*[0-9]\+\.[0-9]\+\.[0-9]\+" boojoog-si
 PHP_CONSTANT_VERSION=$(grep "BOOJOOG_SIMPLE_SEO_VERSION" boojoog-simple-seo.php | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+")
 README_BADGE_VERSION=$(grep "Version-" README.md | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" | head -1)
 
-# Check README.txt if it exists
-if [ -f "README.txt" ]; then
-    README_TXT_VERSION=$(grep "Stable tag:" README.txt | grep -o "[0-9]\+\.[0-9]\+\.[0-9]\+" || echo "Not found")
-else
-    README_TXT_VERSION="File not found"
-fi
-
 # Get latest git tag version
 LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "No tags found")
 if [[ $LATEST_TAG =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
@@ -47,14 +40,10 @@ echo "==================="
 echo -e "Plugin Header:     ${BLUE}$PLUGIN_HEADER_VERSION${NC}"
 echo -e "PHP Constant:      ${BLUE}$PHP_CONSTANT_VERSION${NC}"
 echo -e "README.md Badge:   ${BLUE}$README_BADGE_VERSION${NC}"
-echo -e "README.txt:        ${BLUE}$README_TXT_VERSION${NC}"
 echo -e "Latest Git Tag:    ${BLUE}$TAG_VERSION${NC}"
 
 # Check if all versions match
 ALL_VERSIONS=($PLUGIN_HEADER_VERSION $PHP_CONSTANT_VERSION $README_BADGE_VERSION)
-if [ -f "README.txt" ] && [[ $README_TXT_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    ALL_VERSIONS+=($README_TXT_VERSION)
-fi
 
 FIRST_VERSION=${ALL_VERSIONS[0]}
 ALL_MATCH=true

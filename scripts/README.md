@@ -15,7 +15,6 @@ This directory contains utility scripts for managing the Boojoog Simple SEO plug
   - Plugin header in `boojoog-simple-seo.php`
   - PHP constant `BOOJOOG_SIMPLE_SEO_VERSION`
   - README.md version badge
-  - README.txt stable tag (if exists)
 - Commits the changes
 - Creates and pushes a git tag
 - Triggers the GitHub Actions release workflow
@@ -43,7 +42,6 @@ This directory contains utility scripts for managing the Boojoog Simple SEO plug
 - Plugin header version
 - PHP constant version
 - README.md badge version
-- README.txt stable tag
 - Latest git tag version
 
 **Usage**:
@@ -63,7 +61,6 @@ This directory contains utility scripts for managing the Boojoog Simple SEO plug
 Plugin Header:     1.0.0
 PHP Constant:      1.0.0
 README.md Badge:   1.0.0
-README.txt:        1.0.0
 Latest Git Tag:    1.0.0
 
 ✅ All versions are in sync!
@@ -117,13 +114,7 @@ If you need to update versions manually:
    [![Version](https://img.shields.io/badge/Version-1.2.3-orange.svg)]
    ```
 
-3. Update `README.txt` (if exists):
-
-   ```
-   Stable tag: 1.2.3
-   ```
-
-4. Create git tag:
+3. Create git tag:
    ```bash
    git tag v1.2.3
    git push origin v1.2.3

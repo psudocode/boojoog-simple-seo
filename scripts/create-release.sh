@@ -174,11 +174,6 @@ sed -i.bak "s/define('BOOJOOG_SIMPLE_SEO_VERSION', '.*');/define('BOOJOOG_SIMPLE
 # Update README.md badge
 sed -i.bak "s/Version-.*-orange/Version-$NEW_VERSION-orange/" README.md
 
-# Update README.txt if it exists
-if [ -f "README.txt" ]; then
-    sed -i.bak "s/Stable tag: .*/Stable tag: $NEW_VERSION/" README.txt
-fi
-
 # Remove backup files
 rm -f *.bak
 
@@ -187,9 +182,6 @@ print_success "Updated version to $NEW_VERSION in local files"
 # Commit the version changes
 print_info "Committing version changes..."
 git add boojoog-simple-seo.php README.md
-if [ -f "README.txt" ]; then
-    git add README.txt
-fi
 git commit -m "🔖 Prepare release v$NEW_VERSION"
 
 # Create and push the tag

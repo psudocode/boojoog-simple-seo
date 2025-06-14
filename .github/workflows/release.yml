@@ -63,11 +63,6 @@ jobs:
             # Update README.md version badge
             sed -i "s/Version-.*-orange/Version-$VERSION-orange/" plugin-build/boojoog-simple-seo/README.md
             
-            # Update README.txt stable tag if it exists
-            if [ -f "plugin-build/boojoog-simple-seo/README.txt" ]; then
-              sed -i "s/Stable tag: .*/Stable tag: $VERSION/" plugin-build/boojoog-simple-seo/README.txt
-            fi
-            
             echo "✅ Updated version to $VERSION in all plugin files"
             
             # Verify the updates
@@ -126,26 +121,19 @@ jobs:
 
       - name: Commit version updates back to repository
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          # Copy updated files back to the working directory
+        run: |          # Copy updated files back to the working directory
           cp plugin-build/boojoog-simple-seo/boojoog-simple-seo.php ./
           cp plugin-build/boojoog-simple-seo/README.md ./
-          if [ -f "plugin-build/boojoog-simple-seo/README.txt" ]; then
-            cp plugin-build/boojoog-simple-seo/README.txt ./
-          fi
-
+          
           # Configure git
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
+          
           # Check if there are changes to commit
           if git diff --quiet && git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git add boojoog-simple-seo.php README.md
-            if [ -f "README.txt" ]; then
-              git add README.txt
-            fi
             git commit -m "🔖 Update version to ${{ steps.get_version.outputs.VERSION }}"
             git push origin HEAD:main || git push origin HEAD:master || echo "Could not push changes back to repository"
           fi
