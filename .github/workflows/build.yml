@@ -1,0 +1,147 @@
+name: Build Plugin ZIP
+
+on:
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      create_release:
+        description: 'Create a GitHub release'
+        required: false
+        default: false
+        type: boolean
+  push:
+    branches: [ main, master ]  # Auto-build on main/master branch pushes
+
+jobs:
+  build-zip:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Get short SHA
+      id: get_sha
+      run: |
+        SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        BUILD_VERSION="dev-${TIMESTAMP}-${SHORT_SHA}"
+        echo "BUILD_VERSION=$BUILD_VERSION" >> $GITHUB_OUTPUT
+        echo "Build version: $BUILD_VERSION"
+    
+    - name: Prepare plugin files
+      run: |
+        # Create build directory
+        mkdir -p build/boojoog-simple-seo
+        
+        # Copy plugin files (exclude development files)
+        rsync -av \
+          --exclude='.git*' \
+          --exclude='.github' \
+          --exclude='node_modules' \
+          --exclude='*.log' \
+          --exclude='.DS_Store' \
+          --exclude='Thumbs.db' \
+          --exclude='.vscode' \
+          --exclude='.idea' \
+          --exclude='*.tmp' \
+          --exclude='*.temp' \
+          --exclude='tests' \
+          --exclude='phpunit.xml' \
+          --exclude='composer.json' \
+          --exclude='composer.lock' \
+          --exclude='package.json' \
+          --exclude='package-lock.json' \
+          --exclude='webpack.config.js' \
+          --exclude='gulpfile.js' \
+          --exclude='Gruntfile.js' \
+          ./ build/boojoog-simple-seo/
+    
+    - name: Validate plugin structure
+      run: |
+        # Check if main plugin file exists
+        if [ ! -f "build/boojoog-simple-seo/boojoog-simple-seo.php" ]; then
+          echo "❌ Main plugin file not found!"
+          exit 1
+        fi
+        
+        # Check for required directories
+        for dir in admin includes public; do
+          if [ ! -d "build/boojoog-simple-seo/$dir" ]; then
+            echo "❌ Required directory '$dir' not found!"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Plugin structure validation passed"
+    
+    - name: Create ZIP archive
+      run: |
+        cd build
+        zip -r "../boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip" boojoog-simple-seo/
+        cd ..
+        
+        # Get ZIP file size
+        ZIP_SIZE=$(du -h "boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip" | cut -f1)
+        echo "📦 ZIP file size: $ZIP_SIZE"
+        
+        # List ZIP contents (first 20 files)
+        echo "📁 ZIP contents preview:"
+        unzip -l "boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip" | head -25
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: boojoog-simple-seo-build-${{ steps.get_sha.outputs.BUILD_VERSION }}
+        path: boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip
+        retention-days: 30
+    
+    - name: Create Release (if requested)
+      if: github.event.inputs.create_release == 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: build-${{ steps.get_sha.outputs.BUILD_VERSION }}
+        release_name: Boojoog Simple SEO Build ${{ steps.get_sha.outputs.BUILD_VERSION }}
+        body: |
+          ## Development Build
+          
+          This is an automated build from the latest code.
+          
+          **Build Info:**
+          - Commit: ${{ github.sha }}
+          - Branch: ${{ github.ref_name }}
+          - Build Time: ${{ steps.get_sha.outputs.BUILD_VERSION }}
+          
+          **⚠️ Note:** This is a development build and may not be stable.
+          
+          ### Installation
+          1. Download the ZIP file below
+          2. Upload to WordPress: Plugins → Add New → Upload Plugin
+          3. Activate the plugin
+        draft: false
+        prerelease: true
+    
+    - name: Upload ZIP to Release
+      if: github.event.inputs.create_release == 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip
+        asset_name: boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip
+        asset_content_type: application/zip
+    
+    - name: Summary
+      run: |
+        echo "## 🎉 Build Complete!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Plugin ZIP created successfully!**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **File:** boojoog-simple-seo-${{ steps.get_sha.outputs.BUILD_VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build Version:** ${{ steps.get_sha.outputs.BUILD_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "You can download the ZIP from the **Artifacts** section above." >> $GITHUB_STEP_SUMMARY
