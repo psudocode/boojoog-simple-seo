@@ -16,7 +16,7 @@
  * Plugin Name:       Boojoog Simple SEO
  * Plugin URI:        https://saas.boojoog.com
  * Description:       Boojoog Simple SEO makes SEO easy for everyone. It’s simple and clear to use, yet powered by smart features under the hood that help your site perform better in search engines—no SEO expertise required.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Ahmad Awdiyanto
  * Author URI:        https://boojoog.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('BOOJOOG_SIMPLE_SEO_VERSION', '1.0.2');
+define('BOOJOOG_SIMPLE_SEO_VERSION', '1.0.3');
 define('BOOJOOG_SIMPLE_SEO_NAMESPACE', 'bss_');
 
 /**
