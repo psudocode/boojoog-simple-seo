@@ -2,7 +2,7 @@
 
 [![WordPress Plugin](https://img.shields.io/badge/WordPress-Plugin-blue.svg)](https://wordpress.org/)
 [![GPL License](https://img.shields.io/badge/License-GPL%202.0-green.svg)](http://www.gnu.org/licenses/gpl-2.0.txt)
-[![Version](https://img.shields.io/badge/Version-1.0.3-orange.svg)](https://github.com/psudocode/boojoog-simple-seo)
+[![Version](https://img.shields.io/badge/Version-1.0.4-orange.svg)](https://github.com/psudocode/boojoog-simple-seo)
 
 **Boojoog Simple SEO makes SEO easy for everyone.** It's simple and clear to use, yet powered by smart features under the hood that help your site perform better in search engines—no SEO expertise required.
 
