@@ -82,8 +82,20 @@ class Boojoog_Simple_Seo_Admin
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/article.meta.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/boojoog-simple-seo-admin.js', array('jquery'), $this->version, false);
+		wp_register_script(
+			$this->plugin_name . '-article-meta',
+			plugin_dir_url(__FILE__) . 'js/article.meta.js.js',
+			array('jquery'),
+			$this->version,
+		);
+		wp_register_script(
+			$this->plugin_name . '-admin',
+			plugin_dir_url(__FILE__) . 'js/boojoog-simple-seo-admin.js',
+			array('jquery'),
+			$this->version,
+		);
+		wp_enqueue_script($this->plugin_name . '-article-meta');
+		wp_enqueue_script($this->plugin_name . '-admin');
 		wp_enqueue_media();
 
 	}

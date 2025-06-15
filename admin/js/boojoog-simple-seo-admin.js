@@ -15,6 +15,7 @@
 
     tabs.on("click", function (e) {
       e.preventDefault();
+      console.log("Tab clicked:", $(this).attr("href"));
 
       // Remove active class from all tabs and contents
       tabs.removeClass("nav-tab-active");
