@@ -99,3 +99,65 @@
 .bss .tab-content.active {
     display: block;
 }
+
+.bss-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.bss-summary-item {
+    /* card */
+    background-color: #2c3236;
+    padding: 10px;
+    color: var(--bss-text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    transform: translateY(0);
+}
+
+.bss-summary-item:hover {
+    transform: translateY(-2px);
+}
+
+.bss-summary-item {
+    --progress-width: 0%;
+    --progress-color: #e0e0e0;
+    position: relative;
+    border-bottom: 3px solid #e0e0e0; /* Default border */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.bss-summary-item::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    height: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Word count progress borders */
+.bss-summary-item.state-bad::after {
+    width: 30%;
+    background-color: #e74c3c; /* Red for bad */
+}
+
+.bss-summary-item.state-normal::after {
+    width: 50%;
+    background-color: #f39c12; /* Orange for normal */
+}
+
+.bss-summary-item.state-good::after {
+    width: 90%;
+    background-color: #27ae60; /* Green for good */
+}
+
+/* Alternative: Linear gradient approach */
+.bss-summary-item.progress-border {
+    border-bottom: 3px solid transparent;
+    background-image: linear-gradient(to right, var(--progress-color) var(--progress-width), #e0e0e0 var(--progress-width));
+    background-size: 100% 3px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}

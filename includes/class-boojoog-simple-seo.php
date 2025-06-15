@@ -181,6 +181,10 @@ class Boojoog_Simple_Seo
 		$this->loader->add_setting('analytics_settings');
 		$this->loader->add_setting('webmaster_tools');
 		$this->loader->add_setting('email_notifications');
+
+		// add metaboxes
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'bss_add_meta_boxes');
+		$this->loader->add_action('save_post', $plugin_admin, 'bss_save_meta_boxes');
 	}
 
 	/**

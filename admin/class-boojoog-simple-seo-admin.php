@@ -82,8 +82,10 @@ class Boojoog_Simple_Seo_Admin
 	 */
 	public function enqueue_scripts()
 	{
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/article.meta.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/boojoog-simple-seo-admin.js', array('jquery'), $this->version, false);
 		wp_enqueue_media();
+
 	}
 
 	public function add_admin_menu()
@@ -162,5 +164,72 @@ class Boojoog_Simple_Seo_Admin
 	public function init_settings()
 	{
 
+	}
+
+	public function bss_add_meta_boxes()
+	{
+		add_meta_box(
+			'bss_meta_box',
+			'Boojoog SEO',
+			array($this, 'bss_meta_box_callback'),
+			['post', 'page'], // Post types where the meta box will appear
+			'normal', // Context
+			'high' // Priority
+		);
+	}
+
+	public function bss_meta_box_callback($post)
+	{
+		require_once plugin_dir_path(__FILE__) . 'partials/boojoog-simple-seo-admin-meta-box.php';
+	}
+
+	public function bss_save_meta_boxes($post_id)
+	{
+		// Check if our nonce is set.
+		if (!isset($_POST['bss_meta_box_nonce'])) {
+			return;
+		}
+
+		// Verify that the nonce is valid.
+		if (!wp_verify_nonce($_POST['bss_meta_box_nonce'], 'bss_meta_box')) {
+			return;
+		}
+
+		// Check if the user has permissions to save data.
+		if (!current_user_can('edit_post', $post_id)) {
+			return;
+		}
+
+		// Save the meta title
+		if (isset($_POST['bss_title'])) {
+			update_post_meta($post_id, 'bss_meta_title', sanitize_text_field($_POST['bss_title']));
+		}
+
+		// Save the meta description
+		if (isset($_POST['bss_description'])) {
+			update_post_meta($post_id, 'bss_meta_description', sanitize_textarea_field($_POST['bss_description']));
+		}
+
+		if (isset($_POST['bss_image'])) {
+			$image_url = esc_url_raw($_POST['bss_image']);
+			if (!empty($image_url)) {
+				update_post_meta($post_id, 'bss_meta_image', $image_url);
+			} else {
+				delete_post_meta($post_id, 'bss_meta_image');
+			}
+		} else {
+			delete_post_meta($post_id, 'bss_meta_image');
+		}
+		// Save the meta author
+		if (isset($_POST['bss_author'])) {
+			$author = sanitize_text_field($_POST['bss_author']);
+			if (!empty($author)) {
+				update_post_meta($post_id, 'bss_meta_author', $author);
+			} else {
+				delete_post_meta($post_id, 'bss_meta_author');
+			}
+		} else {
+			delete_post_meta($post_id, 'bss_meta_author');
+		}
 	}
 }

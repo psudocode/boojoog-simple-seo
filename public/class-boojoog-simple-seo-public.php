@@ -105,10 +105,6 @@ class Boojoog_Simple_Seo_Public
 		$socialMedia = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'social_media', array());
 		$analytics = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'analytics_settings', array());
 		$webmasterTools = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'webmaster_tools', array());
-		$performanceSettings = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'performance_settings', array());
-		$securitySettings = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'security_settings', array());
-		$emailNotifications = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'email_notifications', array());
-		$advancedSettings = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'advanced_settings', array());
 
 		if (is_front_page() || is_home()) {
 
@@ -271,6 +267,80 @@ class Boojoog_Simple_Seo_Public
 				echo '<meta name="yandex-verification" content="' . esc_attr($webmasterTools['yandex_verification_code']) . '">';
 			}
 		}
+		self::post_page_seo();
+	}
+
+	public static function post_page_seo()
+	{
+		$siteSettings = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'site_settings', array());
+		$socialMedia = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'social_media', array());
+
+		if (is_single() || is_page()) {
+			$post = get_post();
+
+			// get post meta title and description
+			$post_meta_title = get_post_meta($post->ID, 'bss_meta_title', true);
+			$post_meta_description = get_post_meta($post->ID, 'bss_meta_description', true);
+			$post_meta_image = get_post_meta($post->ID, 'bss_meta_image', true);
+			$post_meta_author = get_post_meta($post->ID, 'bss_meta_author', true);
+
+
+			echo 'test';
+			echo 'title: ' . $post_meta_title;
+			echo 'description: ' . $post_meta_description;
+			echo 'image: ' . $post_meta_image;
+			echo 'author: ' . $post_meta_author;
+
+
+			// ESSENTIAL SEO TAGS
+			echo '<meta name="description" content="' . esc_attr($post_meta_description) . '">';
+			$canonical_url = get_site_url();
+			echo '<link rel="canonical" href="' . esc_url($canonical_url) . '">';
+
+			// Branding and Authorship
+			if (!empty($post_meta_author)) {
+				echo '<meta name="author" content="' . esc_attr($post_meta_author) . '">';
+			}
+
+			// open graph tags get from site settings
+			echo '<meta property="og:title" content="' . esc_attr($post_meta_title) . '">';
+			echo '<meta property="og:description" content="' . esc_attr($post_meta_description) . '">';
+			echo '<meta property="og:type" content="article">';
+			echo '<meta property="og:url" content="' . esc_url(get_site_url()) . '">';
+			if (!empty($post_meta_image)) {
+				echo '<meta property="og:image" content="' . esc_url($post_meta_image) . '">';
+			}
+			echo '<meta property="og:site_name" content="' . esc_attr($siteSettings['meta_title']) . '">';
+			echo '<meta property="og:locale" content="' . esc_attr(get_locale()) . '">';
+
+			echo '<meta name="twitter:card" content="summary_large_image">';
+			echo '<meta name="twitter:title" content="' . esc_attr($post_meta_title) . '">';
+			echo '<meta name="twitter:description" content="' . esc_attr($post_meta_description) . '">';
+			if (!empty($post_meta_image)) {
+				echo '<meta name="twitter:image" content="' . esc_url($post_meta_image) . '">';
+			}
+			echo '<meta name="twitter:site" content="@' . esc_attr($socialMedia['twitter']) . '">';
+
+			// JSON-LD article schema
+
+			if ($post) {
+				$articleSchema = array(
+					'@context' => 'https://schema.org',
+					'@type' => 'Article',
+					'headline' => esc_attr($post->post_title),
+					'description' => esc_attr($post_meta_description),
+					'url' => esc_url(get_permalink($post)),
+					'datePublished' => get_the_date('c', $post),
+					'dateModified' => get_the_modified_date('c', $post),
+					'author' => array(
+						'@type' => 'Person',
+						'name' => esc_attr($post_meta_author)
+					),
+					'image' => !empty($post_meta_image) ? esc_url($post_meta_image) : ''
+				);
+				echo '<script type="application/ld+json">' . json_encode($articleSchema, JSON_PRETTY_PRINT) . '</script>';
+			}
+		}
 	}
 
 	public function filter_document_title($title)
@@ -278,6 +348,17 @@ class Boojoog_Simple_Seo_Public
 		$siteSettings = get_option(BOOJOOG_SIMPLE_SEO_NAMESPACE . 'site_settings', array());
 		if (is_front_page() || is_home()) {
 			return $siteSettings['meta_title'] ? $siteSettings['meta_tagline'] . ' - ' . $siteSettings['meta_title'] : get_bloginfo('name');
+		} elseif (is_single() || is_page()) {
+			// For single posts or pages, use the post title
+			$post = get_post();
+			if ($post) {
+				$title = $post->post_title . ' - ' . $siteSettings['meta_title'];
+			} else {
+				$title = $siteSettings['meta_title'] ? $siteSettings['meta_title'] : get_bloginfo('name');
+			}
+		} else {
+			// For other pages, just return the site name
+			$title = get_bloginfo('name');
 		}
 		return $title;
 	}
