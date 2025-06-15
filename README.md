@@ -214,7 +214,7 @@ Want to contribute to any of these features? Check out our [Contributing Guideli
 
 ## 📝 Changelog
 
-### 1.0.2 (2025-06-15)
+### 1.0.3 (2025-06-15)
 
 - ✨ **Added Post and Page SEO functionality**
 - 📝 **New article meta box** for individual post/page SEO optimization
