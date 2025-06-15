@@ -180,12 +180,12 @@ Have an idea for a new feature? We'd love to hear it!
 ### Current Status
 
 - ✅ **Homepage SEO**: Complete optimization for homepage content and meta tags
+- ✅ **Post and Page SEO**: Individual SEO optimization for posts and pages
 
 ### Planned Features
 
 #### 🎯 Next Release (v1.1.0)
 
-- [ ] **Post and Page SEO**: Individual SEO optimization for posts and pages
 - [ ] **Custom Taxonomy SEO**: SEO support for custom taxonomies and terms
 
 #### 🚀 Future Releases (v1.2.0+)
@@ -213,6 +213,16 @@ Want to contribute to any of these features? Check out our [Contributing Guideli
 - **Website**: [https://boojoog.com](https://boojoog.com)
 
 ## 📝 Changelog
+
+### 1.0.2 (2025-06-15)
+
+- ✨ **Added Post and Page SEO functionality**
+- 📝 **New article meta box** for individual post/page SEO optimization
+- 🎛️ **Enhanced admin interface** with improved meta box handling
+- 📱 **Added article meta JavaScript** for dynamic SEO controls
+- 🎨 **Updated admin styles** for better user experience
+- 🔧 **Core plugin improvements** and public class enhancements
+- 🚀 **Updated GitHub workflow configuration**
 
 ### 1.0.1 (2025-06-15)
 
